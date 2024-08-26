@@ -107,8 +107,7 @@ export function Dashboard() {
               </div>
             </div>
             <div className="w-[588px] h-[228px]">
-              <div className="flex">
-                <ChartPie />
+              <div className="flex p-[12px_24px]">
                 <div className="flex flex-col gap-4 font-normal text-sm text-gray-900">
                   <div className="flex">
                     <div className="flex gap-2 w-[153px] items-center">
@@ -162,7 +161,9 @@ export function Dashboard() {
               Last Records
             </div>
           </div>
-          <div></div>
+          <div>
+          <div className="h-12 border-b border-b-gray-200 p-2"></div>
+          </div>
         </div>
       </div>
     </div>
