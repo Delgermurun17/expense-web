@@ -12,7 +12,7 @@ export function Dashboard() {
           {/* First card */}
           <div
             style={{ backgroundImage: `url("/Noise.png")` }}
-            className="card w-full h-[216px] rounded-[18px]"
+            className="w-full h-[216px] rounded-[18px] bg-[#0166FF]"
           >
             <div className="relative top-8 left-8 text-white">
               <Logo />
