@@ -1,4 +1,10 @@
 "use client";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import {
   House,
@@ -14,6 +20,9 @@ import {
   Coins,
   Check,
   Eye,
+  Leaf,
+  Trash2,
+  Edit3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -24,6 +33,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
+import { AccordionDemo } from "./AccordionDemo";
 const categoryIcons = [
   { name: "home", Icon: House },
   { name: "fingerprint", Icon: FingerprintIcon },
@@ -34,6 +44,7 @@ const categoryIcons = [
   { name: "vehicle", Icon: Car },
   { name: "shop", Icon: ShoppingCart },
   { name: "invest", Icon: Coins },
+  { name: "leaf", Icon: Leaf },
 ];
 const categoryColors = [
   {
@@ -84,6 +95,19 @@ export function RecordsCategory() {
     loadList();
   }, []);
 
+  function editCategory(id) {
+    const updatedName = prompt("Edit");
+    if (!updatedName) return;
+    fetch(`http://localhost:5000/category/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ name: updatedName }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }).then(() => {
+      loadList();
+    });
+  }
 
   function createNew() {
     if (!newInput) return;
@@ -97,14 +121,24 @@ export function RecordsCategory() {
     })
       .then((res) => res.json())
       .then(() => {
-        setNewinput("")
+        setNewinput("");
         loadList();
-        setOpen(false)
+        setOpen(false);
       });
   }
+  function deleteCategory(id) {
+    fetch(`http://localhost:5000/category/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.status === 404) {
+        alert("Not Found");
+      }
+      loadList();
+    });
+  }
 
-  function ChangeInput(event){
-    setNewinput(event.target.value)
+  function ChangeInput(event) {
+    setNewinput(event.target.value);
   }
 
   function enter(event) {
@@ -121,20 +155,52 @@ export function RecordsCategory() {
       </div>
       <div className="flex flex-col gap-2">
         {categories.map((category) => (
-          <div key={category.id} className="w-[250px] h-[32px] flex justify-between">
-            <div className="flex gap-2 px-3 py-1 justify-center items-center">
-              <Eye className="size-5 text-slate-400"/>
-              <div className="font-normal text-normal text-[#1F2937]">{category.name}</div>
-            </div>
-            <div className="size-5"><Image src={"right-arrow.svg"} width={20} height={20} alt={"right"}/></div>
-          </div>
+          <Accordion
+            key={category.id}
+            type="single"
+            collapsible
+            className="w-full"
+          >
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="w-[250px] h-[32px] flex justify-between">
+                <div className="flex gap-2 px-3 py-1 justify-center items-center">
+                  <Eye className="size-5 text-slate-400" />
+                  <div className="font-normal text-normal text-[#1F2937]">
+                    {category.name}
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="flex h-[40px] items-center justify-between px-4 pb-0">
+                <div className="flex">
+                  {categoryIcons.map(({ name, Icon }) => (
+                    <div key={name}>
+                      {category.icon === name && (
+                        <Icon style={{ color: category.color }} />
+                      )}
+                    </div>
+                  ))}
+                  <div className="ml-2 text-lg font-semibold">
+                    {category.name}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Edit3 onClick={() => editCategory(category.id)} className="cursor-pointer" />
+                  <Trash2 onClick={() => deleteCategory(category.id)} className="cursor-pointer" />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         ))}
-      <div onClick={() => setOpen(true)} className="flex gap-2 px-3 py-1 items-center cursor-pointer w-[156.9px]">
-        <div>
-          <Plus className="text-[#0166FF] size-5" />
+        <div
+          onClick={() => setOpen(true)}
+          className="flex gap-2 px-3 py-1 items-center cursor-pointer w-[156.9px]"
+        >
+          <div>
+            <Plus className="text-[#0166FF] size-5" />
+          </div>
+          <div>Add Category</div>
         </div>
-        <div>Add Category</div>
-      </div></div>
+      </div>
       <Dialog open={open}>
         <DialogContent className="max-w-[494px] h-[236px] p-0 flex flex-col justify-center">
           <div className="h-[68px] p-[20px_24px] flex items-center border-b border-b-slate-200 justify-between">
