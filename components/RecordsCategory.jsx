@@ -82,6 +82,7 @@ export function RecordsCategory() {
   const [color, setColor] = useState("#000");
   const [categories, setCategories] = useState([]);
   const [newInput, setNewinput] = useState("");
+  const [show, setShow] = useState(null);
 
   function loadList() {
     fetch(`http://localhost:5000/category`)
@@ -154,18 +155,22 @@ export function RecordsCategory() {
         <div className="opacity-20 cursor-pointer">Clear</div>
       </div>
       <div className="flex flex-col gap-2">
-        {categories.map((category) => (
-          <Accordion
-            key={category.id}
-            type="single"
-            collapsible
-            className="w-full"
-          >
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="w-[250px] h-[32px] flex justify-between">
+      <Accordion
+          type="single"
+          collapsible
+          className="w-full"
+          onValueChange={(value) => setShow(value)} 
+        >
+          {categories.map((category) => (
+            <AccordionItem key={category.id} value={category.id}>
+              <AccordionTrigger
+                className={`w-[250px] h-[32px] flex justify-between ${
+                  show === category.id ? 'bg-gray-100' : ''
+                }`}
+              >
                 <div className="flex gap-2 px-3 py-1 justify-center items-center">
-                  <Eye className="size-5 text-slate-400" />
-                  <div className="font-normal text-normal text-[#1F2937]">
+                  <Eye className={`size-5 ${show === category.id ? 'text-slate-900' : 'text-slate-400'}`} />
+                  <div className={`font-normal text-normal ${show === category.id ? 'text-slate-900' : 'text-[#1F2937]'}`}>
                     {category.name}
                   </div>
                 </div>
@@ -179,7 +184,7 @@ export function RecordsCategory() {
                       )}
                     </div>
                   ))}
-                  <div className="ml-2 text-lg font-semibold">
+                  <div className="ml-2 text-base font-medium">
                     {category.name}
                   </div>
                 </div>
@@ -189,8 +194,8 @@ export function RecordsCategory() {
                 </div>
               </AccordionContent>
             </AccordionItem>
-          </Accordion>
-        ))}
+          ))}
+        </Accordion>
         <div
           onClick={() => setOpen(true)}
           className="flex gap-2 px-3 py-1 items-center cursor-pointer w-[156.9px]"
