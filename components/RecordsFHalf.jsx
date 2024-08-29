@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { RecordsCategory } from "./RecordsCategory";
+import { RecordsAdd } from "./RecordsAdd";
 
 export function RecordsFHalf() {
   return (
@@ -8,12 +9,7 @@ export function RecordsFHalf() {
       <div className="flex flex-col gap-6 w-[250px]">
         <div className="font-semibold text-2xl text-black">Records</div>
         <div>
-          <Button variant="btn" size="add" className="flex gap-1 h-8">
-            <div className="size-5 p-[2.5px]">
-              <Image alt="+" width={15} height={15} src={"/plus.svg"} />
-            </div>
-            <div className="font-normal text-base">Add</div>
-          </Button>
+            <RecordsAdd />
         </div>
       </div>
       <div>

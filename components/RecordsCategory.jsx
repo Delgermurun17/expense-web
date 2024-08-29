@@ -5,6 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Toaster } from "@/components/ui/sonner"
+import { toast } from "sonner"
 
 import {
   House,
@@ -33,18 +35,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Image from "next/image";
-import { AccordionDemo } from "./AccordionDemo";
 const categoryIcons = [
-  { name: "home", Icon: House },
-  { name: "fingerprint", Icon: FingerprintIcon },
-  { name: "image", Icon: ImageIcon },
-  { name: "id-card", Icon: IdCard },
-  { name: "tool", Icon: Wrench },
-  { name: "healt", Icon: HeartPulse },
-  { name: "vehicle", Icon: Car },
-  { name: "shop", Icon: ShoppingCart },
-  { name: "invest", Icon: Coins },
-  { name: "leaf", Icon: Leaf },
+  { name: "Home", Icon: House },
+  { name: "Fingerprint", Icon: FingerprintIcon },
+  { name: "Image", Icon: ImageIcon },
+  { name: "ID", Icon: IdCard },
+  { name: "Tool", Icon: Wrench },
+  { name: "Healt", Icon: HeartPulse },
+  { name: "Vehicle", Icon: Car },
+  { name: "Shop", Icon: ShoppingCart },
+  { name: "Investment", Icon: Coins },
+  { name: "Leaf", Icon: Leaf },
 ];
 const categoryColors = [
   {
@@ -78,7 +79,7 @@ const categoryColors = [
 ];
 export function RecordsCategory() {
   const [open, setOpen] = useState(false);
-  const [icon, setIcon] = useState("home");
+  const [icon, setIcon] = useState("Home");
   const [color, setColor] = useState("#000");
   const [categories, setCategories] = useState([]);
   const [newInput, setNewinput] = useState("");
@@ -125,6 +126,7 @@ export function RecordsCategory() {
         setNewinput("");
         loadList();
         setOpen(false);
+        toast("Successfully created.")
       });
   }
   function deleteCategory(id) {
@@ -185,7 +187,7 @@ export function RecordsCategory() {
                     </div>
                   ))}
                   <div className="ml-2 text-base font-medium">
-                    {category.name}
+                    {category.icon}
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -284,6 +286,7 @@ export function RecordsCategory() {
           </div>
         </DialogContent>
       </Dialog>
+      <Toaster />
     </div>
   );
 }
