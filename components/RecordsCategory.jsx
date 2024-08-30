@@ -5,8 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Toaster } from "@/components/ui/sonner"
-import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 import {
   House,
@@ -82,8 +82,18 @@ export function RecordsCategory() {
   const [icon, setIcon] = useState("Home");
   const [color, setColor] = useState("#000");
   const [categories, setCategories] = useState([]);
-  const [newInput, setNewinput] = useState("");
   const [show, setShow] = useState(null);
+  const [edit, setEdit] = useState();
+  const [name, setName] = useState();
+
+  useEffect(() => {
+    if (edit) {
+      setOpen(true);
+      setName(edit.name);
+      setIcon(edit.icon);
+      setColor(edit.color);
+    }
+  }, [edit]);
 
   function loadList() {
     fetch(`http://localhost:5000/category`)
@@ -97,36 +107,42 @@ export function RecordsCategory() {
     loadList();
   }, []);
 
-  function editCategory(id) {
-    const updatedName = prompt("Edit");
-    if (!updatedName) return;
-    fetch(`http://localhost:5000/category/${id}`, {
+  function editCategory() {
+    fetch(`http://localhost:5000/category/${edit.id}`, {
       method: "PUT",
-      body: JSON.stringify({ name: updatedName }),
+      body: JSON.stringify({ name: name, color: color, icon: icon }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
     }).then(() => {
       loadList();
+      setOpen(false);
+      toast("Successfully edited.");
     });
+  }
+  function reset() {
+    setName("");
+    setColor("#000");
+    setIcon("Home");
+    setEdit(null);
   }
 
   function createNew() {
-    if (!newInput) return;
+    if (!name) return;
 
     fetch(`http://localhost:5000/category`, {
       method: "POST",
-      body: JSON.stringify({ name: newInput, color: color, icon, icon }),
+      body: JSON.stringify({ name: name, color: color, icon, icon }),
       headers: {
         "Content-type": "Application/json; charset=UTF-8",
       },
     })
       .then((res) => res.json())
       .then(() => {
-        setNewinput("");
+        reset();
         loadList();
         setOpen(false);
-        toast("Successfully created.")
+        toast("Successfully created.");
       });
   }
   function deleteCategory(id) {
@@ -140,13 +156,13 @@ export function RecordsCategory() {
     });
   }
 
-  function ChangeInput(event) {
-    setNewinput(event.target.value);
-  }
-
   function enter(event) {
     if (event.key === "Enter") {
-      createNew();
+      if (edit) {
+        editCategory();
+      } else {
+        createNew();
+      }
     }
   }
 
@@ -157,22 +173,30 @@ export function RecordsCategory() {
         <div className="opacity-20 cursor-pointer">Clear</div>
       </div>
       <div className="flex flex-col gap-2">
-      <Accordion
+        <Accordion
           type="single"
           collapsible
           className="w-full"
-          onValueChange={(value) => setShow(value)} 
+          onValueChange={(value) => setShow(value)}
         >
           {categories.map((category) => (
             <AccordionItem key={category.id} value={category.id}>
               <AccordionTrigger
                 className={`w-[250px] h-[32px] flex justify-between ${
-                  show === category.id ? 'bg-gray-100' : ''
+                  show === category.id ? "bg-gray-100" : ""
                 }`}
               >
                 <div className="flex gap-2 px-3 py-1 justify-center items-center">
-                  <Eye className={`size-5 ${show === category.id ? 'text-slate-900' : 'text-slate-400'}`} />
-                  <div className={`font-normal text-normal ${show === category.id ? 'text-slate-900' : 'text-[#1F2937]'}`}>
+                  <Eye
+                    className={`size-5 ${
+                      show === category.id ? "text-slate-900" : "text-slate-400"
+                    }`}
+                  />
+                  <div
+                    className={`font-normal text-normal ${
+                      show === category.id ? "text-slate-900" : "text-[#1F2937]"
+                    }`}
+                  >
                     {category.name}
                   </div>
                 </div>
@@ -191,15 +215,24 @@ export function RecordsCategory() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Edit3 onClick={() => editCategory(category.id)} className="cursor-pointer" />
-                  <Trash2 onClick={() => deleteCategory(category.id)} className="cursor-pointer" />
+                  <Edit3
+                    onClick={() => setEdit(category)}
+                    className="cursor-pointer"
+                  />
+                  <Trash2
+                    onClick={() => deleteCategory(category.id)}
+                    className="cursor-pointer"
+                  />
                 </div>
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
         <div
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            reset();
+            setOpen(true);
+          }}
           className="flex gap-2 px-3 py-1 items-center cursor-pointer w-[156.9px]"
         >
           <div>
@@ -211,9 +244,16 @@ export function RecordsCategory() {
       <Dialog open={open}>
         <DialogContent className="max-w-[494px] h-[236px] p-0 flex flex-col justify-center">
           <div className="h-[68px] p-[20px_24px] flex items-center border-b border-b-slate-200 justify-between">
-            <div className="font-semibold text-xl text-slate-900">
-              Add Category
-            </div>
+            {edit ? (
+              <div className="font-semibold text-xl text-slate-900">
+                Edit Category
+              </div>
+            ) : (
+              <div className="font-semibold text-xl text-slate-900">
+                Add Category
+              </div>
+            )}
+
             <div>
               <X onClick={() => setOpen(false)} />
             </div>
@@ -270,19 +310,28 @@ export function RecordsCategory() {
                 <input
                   className="rounded-[8px] px-4 py-3 font-normal text-base border border-gray-300 bg-[#f9fafb] outline-none w-[350px] h-12"
                   onKeyDown={enter}
-                  value={newInput}
-                  onChange={ChangeInput}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   type="text"
                   placeholder="Name"
                 />
               </div>
             </div>
-            <Button
-              onClick={createNew}
-              className="bg-green-600 hover:bg-green-800 rounded-full"
-            >
-              Add
-            </Button>
+            {edit ? (
+              <Button
+                onClick={editCategory}
+                className="bg-green-600 hover:bg-green-800 rounded-full"
+              >
+                Edit
+              </Button>
+            ) : (
+              <Button
+                onClick={createNew}
+                className="bg-green-600 hover:bg-green-800 rounded-full"
+              >
+                Add
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>

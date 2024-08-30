@@ -51,7 +51,30 @@ export function RecordsAdd() {
                   Income
                 </div>
               </div>
-              <div>
+              <div className="flex flex-col h-full justify-between">
+                <div className="h-[268px] flex flex-col justify-between font-normal text-base text-gray-900">
+                  <div className="w-full h-[76px] bg-gray-100 p-[12px_16px]">
+                    <div>Amount</div>
+                    <div className="flex gap-2 text-gray-400 font-normal text-xl">
+                      <div>₮</div>
+                      <input type="number" className="bg-transparent outline-none text-black" placeholder="000.00"/>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap=2">
+                    <div className="leading-[18px]">Category</div>
+                    <div className="w-full h-12 bg-gray-100"></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-full flex flex-col gap-2">
+                      <div className="leading-[18px]">Date</div>
+                      <div className="w-full h-12 bg-gray-100"></div>
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <div className="leading-[18px]">Time</div>
+                      <div className="w-full h-12 bg-gray-100"></div>
+                    </div>
+                  </div>
+                </div>
                 <div className={`w-[348px] h-10 rounded-[100px] text-base text-white font-normal text-center content-center ${show === expense ? 'bg-[#0166FF]' : 'bg-[#16A34A]'}`}>
                   Add record
                 </div>
