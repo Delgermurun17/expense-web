@@ -8,15 +8,19 @@ import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { categoryIcons } from "./CategoryData";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function RecordsAdd() {
-  const [open, setOpen] = useState(false);
   const [show, setShow] = useState("expense");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [popOpen, setPopOpen] = useState(false);
   const expense = "expense";
   const income = "income";
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const record = searchParams.get("record")
+  const open = record === "add"
 
   function loadList() {
     fetch(`http://localhost:5000/category`)
@@ -37,24 +41,13 @@ export function RecordsAdd() {
   };
 
   return (
-    <div>
-      <Button
-        onClick={() => setOpen(true)}
-        variant="btn"
-        size="add"
-        className="flex gap-1 h-8"
-      >
-        <div className="size-5 p-[2.5px]">
-          <Image alt="+" width={15} height={15} src="/plus.svg" />
-        </div>
-        <div className="font-normal text-base">Add</div>
-      </Button>
+    <>
       <Dialog onValueChange={(value) => setShow(value)} open={open}>
         <DialogContent className="sm:max-w-[792px] p-0 flex flex-col justify-center">
           <div className="h-[68px] p-[20px_24px_24px] flex items-center border-b border-b-slate-200 justify-between">
             <div className="font-semibold text-xl text-slate-900">Add Record</div>
             <div>
-              <X onClick={() => setOpen(false)} />
+              <X className="cursor-pointer" onClick={() => router.push(`?`)}/>
             </div>
           </div>
           <div className="h-[444px] flex">
@@ -125,7 +118,7 @@ export function RecordsAdd() {
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent id="category-popover" className="w-[356px] max-h-[392px] !p-0">
-                          <ScrollArea className="h-72 w-full rounded-md border">
+                          <ScrollArea className="max-h-72 w-full rounded-md border">
                             {categories.map((cat) => (
                               <div
                                 onClick={() => handleCategorySelect(cat)}
@@ -194,6 +187,6 @@ export function RecordsAdd() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
