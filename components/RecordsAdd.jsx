@@ -17,7 +17,7 @@ export function RecordsAdd() {
   const expense = "EXPENSE";
   const income = "INCOME";
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams("")
   const record = searchParams.get("record")
   const open = record === "add"
 
