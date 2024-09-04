@@ -22,6 +22,5 @@ export function Header(){
             </div>
             <div><Image width={40} height={40} alt="usericon" src={"usericon.svg"}/></div>
         </div>
-        <RecordsAdd />
     </div>
 )}
