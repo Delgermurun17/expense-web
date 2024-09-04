@@ -75,7 +75,7 @@ export function RecordsCategory() {
 
     fetch(`http://localhost:5000/category`, {
       method: "POST",
-      body: JSON.stringify({ name: name, color: color, icon, icon }),
+      body: JSON.stringify({ name, color, icon }),
       headers: {
         "Content-type": "Application/json; charset=UTF-8",
       },

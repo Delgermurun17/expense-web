@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { X } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -11,12 +10,12 @@ import { categoryIcons } from "./CategoryData";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function RecordsAdd() {
-  const [show, setShow] = useState("expense");
+  const [show, setShow] = useState("EXPENSE");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [popOpen, setPopOpen] = useState(false);
-  const expense = "expense";
-  const income = "income";
+  const expense = "EXPENSE";
+  const income = "INCOME";
   const router = useRouter()
   const searchParams = useSearchParams()
   const record = searchParams.get("record")
