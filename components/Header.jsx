@@ -5,7 +5,6 @@ import { Nav } from "./Nav";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import { RecordsAdd } from "./RecordsAdd";
-import { UserButton } from "@clerk/nextjs";
 
 export function Header() {
   const router = useRouter();
