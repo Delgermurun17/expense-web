@@ -18,8 +18,8 @@ export function RecordsAdd() {
   const income = "INCOME";
   const router = useRouter()
   const searchParams = useSearchParams()
-  const record = searchParams.get("record")
-  const open = record === "add"
+  const record = searchParams.get('record')
+  const open = record === 'add'
 
   function loadList() {
     fetch(`http://localhost:5000/category`)
