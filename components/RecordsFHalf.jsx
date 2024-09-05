@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { RecordsCategory } from "./RecordsCategory";
 import { useRouter } from "next/navigation";
+import { RecordsAdd } from "./RecordsAdd";
 
 export function RecordsFHalf() {
   const router = useRouter()
@@ -22,6 +23,7 @@ export function RecordsFHalf() {
             </div>
             <div className="font-normal text-base">Add</div>
           </Button>
+          <RecordsAdd />
         </div>
       </div>
       <div>

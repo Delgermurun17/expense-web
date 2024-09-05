@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Nav } from "./Nav";
 import { useRouter } from "next/navigation";
-import { RecordsAdd } from "./RecordsAdd";
 
 
 export function Header(){
@@ -21,7 +20,6 @@ export function Header(){
                 <div>Record</div>
             </div>
             <div><Image width={40} height={40} alt="usericon" src={"usericon.svg"}/></div>
-            <RecordsAdd />
         </div>
     </div>
 )}
