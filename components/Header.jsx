@@ -29,7 +29,7 @@ export function Header() {
           <div>Record</div>
         </div>
         <div>
-         <UserButton />
+          <Image width={40} height={40} alt="usericon" src={"usericon.svg"} />
         </div>
         <Suspense fallback={<div>Loading...</div>}>
           <RecordsAdd />
