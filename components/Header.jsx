@@ -2,13 +2,12 @@
 
 import Image from "next/image";
 import { Nav } from "./Nav";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { RecordsAdd } from "./RecordsAdd";
 
 
 export function Header(){
     const router = useRouter()
-    const searchParams = useSearchParams()
 
     return(
     <div className="flex items-center justify-between w-[1200px] h-[72px] mx-auto p-[16px_0px]">
