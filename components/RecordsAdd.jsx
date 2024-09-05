@@ -5,21 +5,39 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { categoryIcons } from "./CategoryData";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { Toaster } from "./ui/sonner";
 
 export function RecordsAdd() {
   const [show, setShow] = useState("EXPENSE");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [popOpen, setPopOpen] = useState(false);
+  const [note, setNote] = useState("");
+  const [payee, setPayee] = useState("");
+  const [amount, setAmount] = useState("");
+  const [catid, setCatid] = useState("");
   const expense = "EXPENSE";
   const income = "INCOME";
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const record = searchParams.get('record')
-  const open = record === 'add'
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const record = searchParams.get("record");
+  const open = record === "add";
+
+  function reset() {
+    setAmount("");
+    setSelectedCategory(null);
+    setShow("EXPENSE");
+    setPayee("");
+    setNote("");
+  }
 
   function loadList() {
     fetch(`http://localhost:5000/category`)
@@ -39,14 +57,38 @@ export function RecordsAdd() {
     setPopOpen(false);
   };
 
+  function createRecord() {
+    fetch(`http://localhost:5000/record`, {
+      method: "POST",
+      body: JSON.stringify({
+        amount: amount,
+        categoryid: catid,
+        type: show,
+        payee: payee,
+        note: note,
+      }),
+      headers: {
+        "Content-type": "Application/json; charset=UTF-8",
+      },
+    })
+      .then((res) => res.json())
+      .then(() => {
+        router.push(`?`);
+        reset();
+        toast("Record added.");
+      });
+  }
+
   return (
     <>
       <Dialog onValueChange={(value) => setShow(value)} open={open}>
         <DialogContent className="sm:max-w-[792px] p-0 flex flex-col justify-center">
           <div className="h-[68px] p-[20px_24px_24px] flex items-center border-b border-b-slate-200 justify-between">
-            <div className="font-semibold text-xl text-slate-900">Add Record</div>
+            <div className="font-semibold text-xl text-slate-900">
+              Add Record
+            </div>
             <div>
-              <X className="cursor-pointer" onClick={() => router.push(`?`)}/>
+              <X className="cursor-pointer" onClick={() => router.push(`?`)} />
             </div>
           </div>
           <div className="h-[444px] flex">
@@ -78,6 +120,8 @@ export function RecordsAdd() {
                     <div className="flex gap-2 text-gray-400 font-normal text-xl">
                       <div>₮</div>
                       <input
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
                         type="number"
                         className="bg-transparent outline-none text-black"
                         placeholder="000.00"
@@ -101,7 +145,11 @@ export function RecordsAdd() {
                                 {categoryIcons.map(({ name, Icon }) => (
                                   <div key={name}>
                                     {selectedCategory.icon === name && (
-                                      <Icon style={{ color: selectedCategory.color }} />
+                                      <Icon
+                                        style={{
+                                          color: selectedCategory.color,
+                                        }}
+                                      />
                                     )}
                                   </div>
                                 ))}
@@ -116,11 +164,17 @@ export function RecordsAdd() {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent id="category-popover" className="w-[356px] max-h-[392px] !p-0">
+                        <PopoverContent
+                          id="category-popover"
+                          className="w-[356px] max-h-[392px] !p-0"
+                        >
                           <ScrollArea className="max-h-72 w-full rounded-md border">
                             {categories.map((cat) => (
                               <div
-                                onClick={() => handleCategorySelect(cat)}
+                                onClick={() => {
+                                  handleCategorySelect(cat);
+                                  setCatid(cat.id);
+                                }}
                                 className="flex h-14 p-4 hover:bg-slate-100 items-center cursor-pointer"
                                 key={cat.id}
                                 aria-label={`Select category ${cat.name}`}
@@ -154,7 +208,8 @@ export function RecordsAdd() {
                   </div>
                 </div>
                 <div
-                  className={`w-[348px] h-10 rounded-[100px] text-base text-white font-normal text-center content-center ${
+                  onClick={createRecord}
+                  className={`w-[348px] h-10 rounded-[100px] text-base text-white font-normal text-center content-center cursor-pointer ${
                     show === expense ? "bg-[#0166FF]" : "bg-[#16A34A]"
                   }`}
                 >
@@ -167,6 +222,8 @@ export function RecordsAdd() {
                 <div className="leading-[18px]">Payee</div>
                 <div>
                   <input
+                    value={payee}
+                    onChange={(e) => setPayee(e.target.value)}
                     type="text"
                     placeholder="Write here"
                     className="rounded-[8px] px-4 py-3 font-normal text-base border border-gray-300 bg-[#f9fafb] outline-none w-[348px] h-12"
@@ -177,6 +234,8 @@ export function RecordsAdd() {
                 <div className="leading-[18px]">Note</div>
                 <div>
                   <textarea
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
                     className="p-4 rounded-[8px] border border-gray-300 w-full h-[280px] bg-gray-100 outline-none resize-none"
                     placeholder="Write here"
                   />
@@ -184,6 +243,7 @@ export function RecordsAdd() {
               </div>
             </div>
           </div>
+          <Toaster />
         </DialogContent>
       </Dialog>
     </>

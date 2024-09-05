@@ -4,6 +4,7 @@ import { Chart } from "./ChartDemo";
 import { ChartPie } from "./ChartPie";
 
 export function Dashboard() {
+
   return (
     <div className="bg-[#F3F4F6]">
       <div className="flex flex-col gap-6 w-[1200px] m-auto pb-10">
@@ -21,7 +22,7 @@ export function Dashboard() {
               <div className="opacity-50 font-normal text-base text-white">
                 Cash
               </div>
-              <div className="font-semibold text-2xl text-white">
+              <div className="font-semibold text-2xl text-white cursor-default">
                 10,000,000
               </div>
             </div>

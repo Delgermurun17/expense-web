@@ -16,13 +16,13 @@ export function RecordSHalf() {
   function loadList() {
     fetch(`http://localhost:5000/record`)
       .then((res) => res.json())
-      .then((data) => {
-        setTransiction(data);
-      });
+      .then((data) => setTransiction(data));
   }
 
   useEffect(() => {
     loadList();
+    const interval = setInterval(loadList, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -108,23 +108,31 @@ export function RecordSHalf() {
                   <div>
                     <div>{trans.name}</div>
                     <div>
-                    {trans.date[0]}
-                    {trans.date[1]}
-                    {trans.date[2]}
-                    {trans.date[3]}
-                    {trans.date[4]}
+                      {trans.date[16]}
+                      {trans.date[17]}
+                      {trans.date[18]}
+                      {trans.date[19]}
+                      {trans.date[20]}
                     </div>
                   </div>
                 </div>
-                <div className={`flex gap-2 justify-center items-center text-base font-semibold ${trans.type === 'EXPENSE' ? "text-[#F54949]" : "text-[#23E01F]"}`}>
-                  <div>{trans.type === 'EXPENSE' ? <div>-</div> : <div>+</div>}</div>
-                  <div>{trans.amount}</div>
+                <div
+                  className={`flex gap-2 justify-center items-center text-base font-semibold ${
+                    trans.type === "EXPENSE"
+                      ? "text-[#F54949]"
+                      : "text-[#23E01F]"
+                  }`}
+                >
+                  <div>
+                    {trans.type === "EXPENSE" ? <div>-</div> : <div>+</div>}
+                  </div>
+                  <div>{trans.amount}₮</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div>Yesterday</div>
+        <div></div>
       </div>
     </div>
   );

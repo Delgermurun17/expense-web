@@ -5,6 +5,7 @@ import { Nav } from "./Nav";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import { RecordsAdd } from "./RecordsAdd";
+import { UserButton } from "@clerk/nextjs";
 
 export function Header() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export function Header() {
           <div>Record</div>
         </div>
         <div>
-          <Image width={40} height={40} alt="usericon" src={"usericon.svg"} />
+         <UserButton />
         </div>
         <Suspense fallback={<div>Loading...</div>}>
           <RecordsAdd />
