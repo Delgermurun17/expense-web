@@ -106,13 +106,9 @@ export function RecordSHalf() {
                     ))}
                   </div>
                   <div>
-                    <div>{trans.name}</div>
-                    <div>
-                      {trans.date[16]}
-                      {trans.date[17]}
-                      {trans.date[18]}
-                      {trans.date[19]}
-                      {trans.date[20]}
+                    <div className="font-normal text-base">{trans.name}</div>
+                    <div className="font-normal text-xs text-gray-500">
+                      {trans.time}
                     </div>
                   </div>
                 </div>

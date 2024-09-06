@@ -30,13 +30,19 @@ export function RecordsAdd() {
   const searchParams = useSearchParams();
   const record = searchParams.get("record");
   const open = record === "add";
-
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
+  const [amountError, setAmountError] = useState(false);
+  const [catidError, setCatidError] = useState(false);
   function reset() {
     setAmount("");
+    setCatid("");
     setSelectedCategory(null);
     setShow("EXPENSE");
     setPayee("");
     setNote("");
+    setAmountError(false);
+    setCatidError(false);
   }
 
   function loadList() {
@@ -49,21 +55,39 @@ export function RecordsAdd() {
   }
 
   useEffect(() => {
+    const now = new Date();
+    setDate(now.toISOString().split("T")[0]);
+    setTime(now.toTimeString().split(" ")[0].substring(0, 5));
+
     loadList();
   }, []);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    setCatid(category.id);
     setPopOpen(false);
   };
 
   function createRecord() {
+    let valid = true;
+    if (!amount) {
+      setAmountError(true);
+      valid = false;
+    }
+    if (!catid) {
+      setCatidError(true);
+      valid = false;
+    }
+    if (!valid) return;
+
     fetch(`http://localhost:5000/record`, {
       method: "POST",
       body: JSON.stringify({
         amount: amount,
         categoryid: catid,
         type: show,
+        date: date,
+        time: time,
         payee: payee,
         note: note,
       }),
@@ -88,7 +112,13 @@ export function RecordsAdd() {
               Add Record
             </div>
             <div>
-              <X className="cursor-pointer" onClick={() => router.push(`?`)} />
+              <X
+                className="cursor-pointer"
+                onClick={() => {
+                  router.push(`?`);
+                  reset();
+                }}
+              />
             </div>
           </div>
           <div className="h-[444px] flex">
@@ -115,7 +145,11 @@ export function RecordsAdd() {
               </div>
               <div className="flex flex-col h-full justify-between">
                 <div className="h-[268px] flex flex-col justify-between font-normal text-base text-gray-900">
-                  <div className="w-full h-[76px] bg-gray-100 p-[12px_16px]">
+                  <div
+                    className={`w-full h-[76px] bg-gray-100 p-[12px_16px] border border-gray-300 rounded-lg ${
+                      amountError === true ? "border-red-600" : ""
+                    }`}
+                  >
                     <div>Amount</div>
                     <div className="flex gap-2 text-gray-400 font-normal text-xl">
                       <div>₮</div>
@@ -135,7 +169,9 @@ export function RecordsAdd() {
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
-                            className="w-full h-12 bg-gray-100 flex justify-start"
+                            className={`w-full h-12 bg-gray-100 flex justify-start ${
+                              catidError === true ? "border-red-500" : ""
+                            }`}
                             aria-label="Category selection"
                             aria-expanded={popOpen}
                             aria-controls="category-popover"
@@ -171,10 +207,7 @@ export function RecordsAdd() {
                           <ScrollArea className="max-h-72 w-full rounded-md border">
                             {categories.map((cat) => (
                               <div
-                                onClick={() => {
-                                  handleCategorySelect(cat);
-                                  setCatid(cat.id);
-                                }}
+                                onClick={() => handleCategorySelect(cat)}
                                 className="flex h-14 p-4 hover:bg-slate-100 items-center cursor-pointer"
                                 key={cat.id}
                                 aria-label={`Select category ${cat.name}`}
@@ -199,11 +232,27 @@ export function RecordsAdd() {
                   <div className="flex gap-3">
                     <div className="w-full flex flex-col gap-2">
                       <div className="leading-[18px]">Date</div>
-                      <div className="w-full h-12 bg-gray-100"></div>
+                      <div className="w-full h-12 bg-gray-100 flex justify-center rounded-lg border border-gray-300">
+                        <input
+                          className="bg-transparent outline-none text-lg"
+                          onChange={(e) => setDate(e.target.value)}
+                          aria-label="Date"
+                          type="date"
+                          value={date}
+                        />
+                      </div>
                     </div>
                     <div className="w-full flex flex-col gap-2">
                       <div className="leading-[18px]">Time</div>
-                      <div className="w-full h-12 bg-gray-100"></div>
+                      <div className="w-full h-12 bg-gray-100 flex justify-center rounded-lg border border-gray-300">
+                        <input
+                          className="bg-transparent outline-none text-lg"
+                          onChange={(e) => setTime(e.target.value)}
+                          aria-label="Time"
+                          type="time"
+                          value={time}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
