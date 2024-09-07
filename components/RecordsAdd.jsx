@@ -59,7 +59,18 @@ export function RecordsAdd() {
     setDate(now.toISOString().split("T")[0]);
     setTime(now.toTimeString().split(" ")[0].substring(0, 5));
 
+    const timeInterval = setInterval(() => {
+      const now = new Date();
+      setTime(now.toTimeString().split(" ")[0].substring(0, 5));
+    }, 1);
+
+    const categoryInterval = setInterval(loadList, 1000);
+
     loadList();
+    return () => {
+      clearInterval(timeInterval);
+      clearInterval(categoryInterval);
+    };
   }, []);
 
   const handleCategorySelect = (category) => {
