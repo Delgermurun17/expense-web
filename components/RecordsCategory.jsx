@@ -60,7 +60,7 @@ export function RecordsCategory() {
     }).then(() => {
       loadList();
       setOpen(false);
-      toast("Successfully edited.");
+      toast("Category name changed.");
     });
   }
   function reset() {
@@ -85,7 +85,7 @@ export function RecordsCategory() {
         reset();
         loadList();
         setOpen(false);
-        toast("Successfully created.");
+        toast("Category created.");
       });
   }
   function deleteCategory(id) {
@@ -96,6 +96,7 @@ export function RecordsCategory() {
         alert("Not Found");
       }
       loadList();
+      toast("Category deleted.");
     });
   }
 
